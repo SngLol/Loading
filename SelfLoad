@@ -1,0 +1,21 @@
+#!/bin/bash
+slf=0
+source /home/snglol/loading/saveslot
+source /home/snglol/loading/$saveslot
+source /home/snglol/loading/slf$saveslot
+
+function selfload {
+source /home/snglol/loading/saveslot
+source /home/snglol/loading/$saveslot
+source /home/snglol/loading/slf$saveslot
+slfd=$(echo "scale=2; x=$slf/100; if(x<1) print 0; x" | bc)
+	clear
+	echo You have $slfd"%" you can collect!
+	slf=$(($slf+$hvEC))
+	echo slf=$slf > /home/snglol/loading/slf$saveslot
+	sleep 1
+	selfload
+}
+
+selfload
+sleep 5
