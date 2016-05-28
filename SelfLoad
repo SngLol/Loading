@@ -8,12 +8,16 @@ function selfload {
 source /home/snglol/loading/saveslot
 source /home/snglol/loading/$saveslot
 source /home/snglol/loading/slf$saveslot
+COa=$(echo "scale=2; x=$hvCO/100; if(x<1) print 0; x" | bc)
+cpus=$(echo "scale=2; x=1-$COa; if(x<1) print 0; x" | bc)
 slfd=$(echo "scale=2; x=$slf/100; if(x<1) print 0; x" | bc)
+hvECd=$(echo "scale=2; x=$hvEC/100; if(x<1) print 0; x" | bc)
 	clear
 	echo You have $slfd"%" you can collect!
+	echo Your CPU load $hvECd"%" each $cpus second!
 	slf=$(($slf+$hvEC))
 	echo slf=$slf > /home/snglol/loading/slf$saveslot
-	sleep 1
+	sleep 0$cpus
 	selfload
 }
 
