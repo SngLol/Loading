@@ -32,6 +32,12 @@ ECd=$(echo "scale=$sc; x=$EC/$prcsc; if(x<1) print 0; x" | bc)
 ECrise=0
 hvEC=0
 
+CO=1500
+COd=$(echo "scale=$sc; x=$CO/$prcsc; if(x<1) print 0; x" | bc)
+COrise=0
+hvCO=0
+COa=$((hvCO / 100))
+
 LPR=3000
 LPRd=$(echo "scale=$sc; x=$LPR/$prcsc; if(x<1) print 0; x" | bc)
 LPRrise=0
@@ -48,22 +54,26 @@ game=game
 PBrisex=125
 PPrisex=25
 ECrisex=250
+COrisex=750
 LPRrisex=1500
 CPHrisex=5000
 
 pplr=$((1 + $hvPP))
 pblr=$((1 + $hvPB))
 eclr=$((1 + $hvEC))
+colr=$((1 + $hvCO))
 cphlr=$((1 + $hvCPH))
 
 pplra=$(($PPrisex * $pplr))
 pblra=$(($PBrisex * $pblr))
 eclra=$(($ECrisex * $eclr))
+colra=$(($COrisex * $colr))
 cphlra=$(($CPHrisex * $cphlr))
 
 ppcha=$(($PP / 2))
 pbcha=$(($PB / 2))
 eccha=$(($EC / 2))
+cocha=$(($CO / 2))
 lprcha=$(($LPR / 2))
 
 echo variables is ok
@@ -77,11 +87,12 @@ function stats {
 	clear
 	echo STATS
 	echo
-	echo "Pressing Power's bought: $hvPP"
-	echo "Progress Blessing's bought: $hvPB"
-	echo "Extra CPU's bought: $hvEC"
-	echo "Cut Prices in Half's bought: $hvCPH"
-	echo "Lower Prices Rise's bought: $hvLPR"
+	echo "Pressing Power's bought:	 $hvPP"
+	echo "Progress Blessing's bought:	 $hvPB"
+	echo "Extra CPU's bought:		 $hvEC"
+	echo "CPU Overclock's bought:		 $hvCO"
+	echo "Cut Prices in Half's bought:	 $hvCPH"
+	echo "Lower Prices Rise's bought:	 $hvLPR"
 	echo
 	echo "Out of my face!	[1]"
 	_key
@@ -210,6 +221,9 @@ function save {
 	echo EC=$EC >> /home/$USER/loading/$saveslot
 	echo ECd=$ECd >> /home/$USER/loading/$saveslot
 	echo hvEC=$hvEC >> /home/$USER/loading/$saveslot
+	echo CO=$CO >> /home/$USER/loading/$saveslot
+	echo COd=$COd >> /home/$USER/loading/$saveslot
+	echo hvCO=$hvCO >> /home/$USER/loading/$saveslot
 	echo CPH=$CPH >> /home/$USER/loading/$saveslot
 	echo CPHd=$CPHd >> /home/$USER/loading/$saveslot
 	echo hvCPH=$hvCPH >> /home/$USER/loading/$saveslot
@@ -244,6 +258,9 @@ function savex {
 	echo EC=$EC >> /home/$USER/loading/$saveslot
 	echo ECd=$ECd >> /home/$USER/loading/$saveslot
 	echo hvEC=$hvEC >> /home/$USER/loading/$saveslot
+	echo CO=$CO >> /home/$USER/loading/$saveslot
+	echo COd=$COd >> /home/$USER/loading/$saveslot
+	echo hvCO=$hvCO >> /home/$USER/loading/$saveslot
 	echo CPH=$CPH >> /home/$USER/loading/$saveslot
 	echo CPHd=$CPHd >> /home/$USER/loading/$saveslot
 	echo hvCPH=$hvCPH >> /home/$USER/loading/$saveslot
@@ -360,6 +377,7 @@ function buy3-1 {
 ppcha=$(($PP / 2))
 pbcha=$(($PB / 2))
 eccha=$(($EC / 2))
+cocha=$(($CO / 2))
 lprcha=$(($LPR / 2))
 	clear
 	if [ $PPrisex -ge $ppcha ]; then
@@ -380,12 +398,19 @@ lprcha=$(($LPR / 2))
 	   sleep 1
 	   shop3
 	  else
-	   if [ $LPRrisex -ge $ppcha ]; then
-	    echo If you buy this, the price of Lower prices Rise will go below 0!
+	   if [ $COrisex -ge $cocha ]; then
+	    echo If you buy this, the price of CPU Overclock will go below 0!
+	    echo Please buy this first.
 	    sleep 1
 	    shop3
 	   else
-	    buy3-1a
+	    if [ $LPRrisex -ge $ppcha ]; then
+	     echo If you buy this, the price of Lower prices Rise will go below 0!
+	     sleep 1
+	     shop3
+	    else
+	     buy3-1a
+	    fi
 	   fi
 	  fi
 	 fi
@@ -406,6 +431,7 @@ function buy3-1a {
 	 PP=$(($PP / 2))
 	 PB=$(($PB / 2))
 	 EC=$(($EC / 2))
+	 CO=$(($CO / 2))
 	 LPR=$(($LPR / 2))
 	 back=shop3
 	 save
@@ -423,6 +449,7 @@ function buy3-2 {
 pplra=$(($PPrisex * $pplr))
 pblra=$(($PBrisex * $pblr))
 eclra=$(($ECrisex * $eclr))
+colra=$(($COrisex * $colr))
 cphlra=$(($ECrisex * $eclr))
 	if [ $pplra -ge $PP ]; then
 	 echo If you buy this, the price of Pressing Power will go below 0!
@@ -442,13 +469,20 @@ cphlra=$(($ECrisex * $eclr))
 	   sleep 1
 	   shop3
 	  else
-	   if [ $cphlra -ge $CPH ]; then
-	    echo "If you buy this, the price of Cut Prices in Half will go below 0!"
+	   if [ $colra -ge $CO ]; then
+	    echo If you buy this, the price of CPU Overclock will go below 0!
 	    echo Please buy this first.
 	    sleep 1
 	    shop3
 	   else
-	    buy3-2a
+	    if [ $cphlra -ge $CPH ]; then
+	     echo "If you buy this, the price of Cut Prices in Half will go below 0!"
+	     echo Please buy this first.
+	     sleep 1
+	     shop3
+	    else
+	     buy3-2a
+	    fi
 	   fi
 	  fi
 	 fi
@@ -469,6 +503,7 @@ function buy3-2a {
 	 PPrisex=$(($PPrisex * $pplr))
 	 PBrisex=$(($PBrisex * $pblr))
 	 ECrisex=$(($ECrisex * $eclr))
+	 COrisex=$(($COrisex * $colr))
 	 CPHrisex=$(($CPHrisex * $cphlr))
 	 back=shop3
 	 save
@@ -486,19 +521,24 @@ sleep $dbs
 #--------------------------------------------------------------
 function shop2 {
 ECd=$(echo "scale=$sc; x=$EC/$prcsc; if(x<1) print 0; x" | bc)
+COd=$(echo "scale=$sc; x=$CO/$prcsc; if(x<1) print 0; x" | bc)
 	clear
 	echo SELF LOAD
 	echo
 	echo "Extra CPU		[1]"	"[$ECd"%"]"
 	echo
-	echo "Return to Shop		[2]"
-	echo "Out of my face!		[3]"
+	echo "CPU Overclock		[2]"	"[$COd"%"]"
+	echo
+	echo "Return to Shop		[3]"
+	echo "Out of my face!		[4]"
 	_key
 	if [ "$_KEY" = "1" ]; then
 	 shop2-1
 	elif [ "$_KEY" = "2" ]; then
-	 shop
+	 shop2-2
 	elif [ "$_KEY" = "3" ]; then
+	 shop
+	elif [ "$_KEY" = "4" ]; then
 	 $game
 	else
 	 shop2
@@ -545,6 +585,47 @@ function buy2-1 {
 	fi
 }
 echo buy2-1 is ok
+sleep $dbs
+
+function shop2-2 {
+	clear
+	echo "CPU Overclock"
+	echo "Your CPU will load 0.01 seconds faster"
+	echo
+	echo "Do you want to buy this for $COd"%"? You have $prcd"%"!"
+	echo "[Y|N]"
+	_key
+	if [ "$_KEY" = "y" ]; then
+	 buy2-2
+	elif [ "$_KEY" = "n" ]; then
+	 shop2
+	else
+	 shop2-2
+	fi
+}
+echo shop2-1 is ok
+sleep $dbs
+
+function buy2-2 {
+	clear
+	if [ $prc -ge $CO ]; then
+	 prc=$(($prc - $CO))
+	 COrise=$(($CO - $COrisex))
+	 CO=$(($CO + $COrise))
+	 hvCO=$(($hvCO + 1))
+	 COa=$((hvCO / 100))
+	 COd=$(echo "scale=$sc; x=$CO/$prcsc; if(x<1) print 0; x" | bc)
+	 prcd=$(echo "scale=$sc; x=$prc/$prcsc; if(x<1) print 0; x" | bc)
+	 back=shop2
+	 save
+	else
+	 clear
+	 echo You do not have enough cash...
+	 sleep 1
+	 shop2
+	fi
+}
+echo buy2-2 is ok
 sleep $dbs
 #--------------------------------------------------------------
 #	LOAD POWER	LOAD POWER	LOAD POWER
