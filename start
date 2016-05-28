@@ -446,6 +446,11 @@ echo buy3-1a is ok
 sleep $dbs
 
 function buy3-2 {
+pplr=$((1 + $hvPP))
+pblr=$((1 + $hvPB))
+eclr=$((1 + $hvEC))
+colr=$((1 + $hvCO))
+cphlr=$((1 + $hvCPH))
 pplra=$(($PPrisex * $pplr))
 pblra=$(($PBrisex * $pblr))
 eclra=$(($ECrisex * $eclr))
