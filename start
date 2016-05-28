@@ -58,17 +58,11 @@ COrisex=750
 LPRrisex=1500
 CPHrisex=5000
 
-pplr=$((1 + $hvPP))
-pblr=$((1 + $hvPB))
-eclr=$((1 + $hvEC))
-colr=$((1 + $hvCO))
-cphlr=$((1 + $hvCPH))
-
-pplra=$(($PPrisex * $pplr))
-pblra=$(($PBrisex * $pblr))
-eclra=$(($ECrisex * $eclr))
-colra=$(($COrisex * $colr))
-cphlra=$(($CPHrisex * $cphlr))
+pplra=$(($PPrisex * 2))
+pblra=$(($PBrisex * 2))
+eclra=$(($ECrisex * 2))
+colra=$(($COrisex * 2))
+cphlra=$(($CPHrisex * 2))
 
 ppcha=$(($PP / 2))
 pbcha=$(($PB / 2))
@@ -94,9 +88,9 @@ function stats {
 	echo "Cut Prices in Half's bought:	 $hvCPH"
 	echo "Lower Prices Rise's bought:	 $hvLPR"
 	echo
-	echo "Out of my face!	[1]"
+	echo "Out of my face!	[G]"
 	_key
-	if [ "$_KEY" = "1" ]; then
+	if [ "$_KEY" = "g" ]; then
 	 $game
 	else
 	 stats
@@ -117,7 +111,7 @@ function collect {
 source /home/$USER/loading/slf$saveslot
 	clear
 	echo Collecting load from CPU...
-	sleep 1
+	sleep 0.5
 	prc=$(($prc + $slf))
 	echo slf=0 > /home/$USER/loading/slf$saveslot
 	$game
@@ -291,12 +285,13 @@ function helpmenu {
 	echo "c - Collect load from CPU"
 	echo "x - Restarts the program"
 	echo "t - Shows your personal stats"
+	echo "g - Gets you back from anywhere"
 	echo "[1] - Press that number to go to or do whatever is said before"
 	echo "[Y|N] - Press y for Yes or n for No"
 	echo
-	echo "Out of my face!	[1]"
+	echo "Out of my face!	[G]"
 	_key
-	if [ "$_KEY" = "1" ]; then
+	if [ "$_KEY" = "g" ]; then
 	 $game
 	else
 	 helpmenu
@@ -318,7 +313,7 @@ LPRd=$(echo "scale=$sc; x=$LPR/$prcsc; if(x<1) print 0; x" | bc)
 	echo "Lower prices rise	[2]"	"[$LPRd"%"]"
 	echo	
 	echo "Return to Shop		[3]"
-	echo "Out of my face!		[4]"
+	echo "Out of my face!		[G]"
 	_key
 	if [ "$_KEY" = "1" ]; then
 	 shop3-1
@@ -326,7 +321,7 @@ LPRd=$(echo "scale=$sc; x=$LPR/$prcsc; if(x<1) print 0; x" | bc)
 	 shop3-2
 	elif [ "$_KEY" = "3" ]; then
 	 shop
-	elif [ "$_KEY" = "4" ]; then
+	elif [ "$_KEY" = "g" ]; then
 	 $game
 	else
 	 shop3
@@ -344,9 +339,12 @@ function shop3-1 {
 	echo "[Y|N]"
 	_key
 	if [ "$_KEY" = "y" ]; then
+	 back=shop3
 	 buy3-1
 	elif [ "$_KEY" = "n" ]; then
 	 shop3
+	elif [ "$_KEY" = "g" ]; then
+	 $game
 	else
 	 shop3-1
 	fi
@@ -363,9 +361,12 @@ function shop3-2 {
 	echo "[Y|N]"
 	_key
 	if [ "$_KEY" = "y" ]; then
+	 back=shop3
 	 buy3-2
 	elif [ "$_KEY" = "n" ]; then
 	 shop3
+	elif [ "$_KEY" = "g" ]; then
+	 $game
 	else
 	 shop3-2
 	fi
@@ -382,33 +383,65 @@ lprcha=$(($LPR / 2))
 	clear
 	if [ $PPrisex -ge $ppcha ]; then
 	 echo If you buy this, the price of Pressing Power will go below 0!
-	 echo Please buy this first.
-	 sleep 1
-	 shop3
+	 echo "Do you want to buy this now for $PPd"%"?" "You have $prcd"%"!"
+	 echo "[Y|N]"
+	 _key
+	 if [ "$_KEY" = "y" ]; then
+	  back=shop3
+	  buy1-1
+	 elif [ "$_KEY" = "n" ]; then
+	  shop3
+	 fi
 	else
 	 if [ $PBrisex -ge $ppcha ]; then
 	  echo If you buy this, the price of Progress Blessing will go below 0!
-	  echo Please buy this first.
-	  sleep 1
-	  shop3
+	  echo "Do you want to buy this now for $PBd"%"?" "You have $prcd"%"!"
+	  echo "[Y|N]"
+	  _key
+	  if [ "$_KEY" = "y" ]; then
+	   back=shop3
+	   buy1-2
+	  elif [ "$_KEY" = "n" ]; then
+	   shop3
+	  fi
 	 else
 	  if [ $ECrisex -ge $ppcha ]; then
 	   echo If you buy this, the price of Extra CPU will go below 0!
-	   echo Please buy this first.
-	   sleep 1
-	   shop3
+	   echo "Do you want to buy this now for $ECd"%"?" "You have $prcd"%"!"
+	   echo "[Y|N]"
+	   _key
+	   if [ "$_KEY" = "y" ]; then
+	    back=shop3
+	    buy2-1
+	   elif [ "$_KEY" = "n" ]; then
+	    shop3
+	   fi
 	  else
 	   if [ $COrisex -ge $cocha ]; then
 	    echo If you buy this, the price of CPU Overclock will go below 0!
-	    echo Please buy this first.
-	    sleep 1
-	    shop3
-	   else
-	    if [ $LPRrisex -ge $ppcha ]; then
-	     echo If you buy this, the price of Lower prices Rise will go below 0!
-	     sleep 1
+	    echo "Do you want to buy this now for $COd"%"?" "You have $prcd"%"!"
+	    echo "[Y|N]"
+	    _key
+	    if [ "$_KEY" = "y" ]; then
+	     back=shop3
+	     buy2-2
+	    elif [ "$_KEY" = "n" ]; then
 	     shop3
+	    fi
+	   else
+	    if [ $LPRrisex -ge $lprcha ]; then
+	     echo If you buy this, the price of Lower prices Rise will go below 0!
+	     echo "Do you want to buy this now for $LPRd"%"?" "You have $prcd"%"!"
+	     echo "[Y|N]"
+	     _key
+	     if [ "$_KEY" = "y" ]; then
+	      back=shop3
+	      buy3-2
+	     elif [ "$_KEY" = "n" ]; then
+	      shop3
+	     fi
 	    else
+	     back=shop3
 	     buy3-1a
 	    fi
 	   fi
@@ -433,7 +466,6 @@ function buy3-1a {
 	 EC=$(($EC / 2))
 	 CO=$(($CO / 2))
 	 LPR=$(($LPR / 2))
-	 back=shop3
 	 save
 	else
 	 clear
@@ -446,46 +478,73 @@ echo buy3-1a is ok
 sleep $dbs
 
 function buy3-2 {
-pplr=$((1 + $hvPP))
-pblr=$((1 + $hvPB))
-eclr=$((1 + $hvEC))
-colr=$((1 + $hvCO))
-cphlr=$((1 + $hvCPH))
-pplra=$(($PPrisex * $pplr))
-pblra=$(($PBrisex * $pblr))
-eclra=$(($ECrisex * $eclr))
-colra=$(($COrisex * $colr))
-cphlra=$(($ECrisex * $eclr))
+pplra=$(($PPrisex * 2))
+pblra=$(($PBrisex * 2))
+eclra=$(($ECrisex * 2))
+colra=$(($COrisex * 2))
+cphlra=$(($ECrisex * 2))
+	clear
 	if [ $pplra -ge $PP ]; then
 	 echo If you buy this, the price of Pressing Power will go below 0!
-	 echo Please buy this first.
-	 sleep 1
-	 shop3
+	 echo "Do you want to buy this now for $PPd"%"?" "You have $prcd"%"!"
+	 echo "[Y|N]"
+	 _key
+	 if [ "$_KEY" = "y" ]; then
+	  back=shop3
+	  buy1-1
+	 elif [ "$_KEY" = "n" ]; then
+	  shop3
+	 fi
 	else
 	 if [ $pblra -ge $PB ]; then
 	  echo If you buy this, the price of Progress Blessing will go below 0!
-	  echo Please buy this first.
-	  sleep 1
-	  shop3
+	  echo "Do you want to buy this now for $PBd"%"?" "You have $prcd"%"!"
+	  echo "[Y|N]"
+	  _key
+	  if [ "$_KEY" = "y" ]; then
+	   back=shop3
+	   buy1-2
+	  elif [ "$_KEY" = "n" ]; then
+	   shop3
+	  fi
 	 else
 	  if [ $eclra -ge $EC ]; then
 	   echo If you buy this, the price of Extra CPU will go below 0!
-	   echo Please buy this first.
-	   sleep 1
-	   shop3
+	   echo "Do you want to buy this now for $ECd"%"?" "You have $prcd"%"!"
+	   echo "[Y|N]"
+	   _key
+	   if [ "$_KEY" = "y" ]; then
+	    back=shop3
+	    buy2-1
+	   elif [ "$_KEY" = "n" ]; then
+	    shop3
+	   fi
 	  else
 	   if [ $colra -ge $CO ]; then
 	    echo If you buy this, the price of CPU Overclock will go below 0!
-	    echo Please buy this first.
-	    sleep 1
-	    shop3
+	    echo "Do you want to buy this now for $COd"%"?" "You have $prcd"%"!"
+	    echo "[Y|N]"
+	    _key
+	    if [ "$_KEY" = "y" ]; then
+	     back=shop3
+	     buy2-2
+	    elif [ "$_KEY" = "n" ]; then
+	     shop3
+	    fi
 	   else
 	    if [ $cphlra -ge $CPH ]; then
 	     echo "If you buy this, the price of Cut Prices in Half will go below 0!"
-	     echo Please buy this first.
-	     sleep 1
-	     shop3
+	     echo "Do you want to buy this now for $CPHd"%"?" "You have $prcd"%"!"
+	     echo "[Y|N]"
+	     _key
+	     if [ "$_KEY" = "y" ]; then
+	      back=shop3
+	      buy3-1
+	     elif [ "$_KEY" = "n" ]; then
+	      shop3
+	     fi
 	    else
+	     back=shop3
 	     buy3-2a
 	    fi
 	   fi
@@ -505,12 +564,11 @@ function buy3-2a {
 	 hvLPR=$(($hvLPR + 1))
 	 LPRd=$(echo "scale=$sc; x=$LPR/$prcsc; if(x<1) print 0; x" | bc)
 	 prcd=$(echo "scale=$sc; x=$prc/$prcsc; if(x<1) print 0; x" | bc)
-	 PPrisex=$(($PPrisex * $pplr))
-	 PBrisex=$(($PBrisex * $pblr))
-	 ECrisex=$(($ECrisex * $eclr))
-	 COrisex=$(($COrisex * $colr))
-	 CPHrisex=$(($CPHrisex * $cphlr))
-	 back=shop3
+	 PPrisex=$(($PPrisex * 2))
+	 PBrisex=$(($PBrisex * 2))
+	 ECrisex=$(($ECrisex * 2))
+	 COrisex=$(($COrisex * 2))
+	 CPHrisex=$(($CPHrisex * 2))
 	 save
 	else
 	 clear
@@ -535,7 +593,7 @@ COd=$(echo "scale=$sc; x=$CO/$prcsc; if(x<1) print 0; x" | bc)
 	echo "CPU Overclock		[2]"	"[$COd"%"]"
 	echo
 	echo "Return to Shop		[3]"
-	echo "Out of my face!		[4]"
+	echo "Out of my face!		[G]"
 	_key
 	if [ "$_KEY" = "1" ]; then
 	 shop2-1
@@ -543,7 +601,7 @@ COd=$(echo "scale=$sc; x=$CO/$prcsc; if(x<1) print 0; x" | bc)
 	 shop2-2
 	elif [ "$_KEY" = "3" ]; then
 	 shop
-	elif [ "$_KEY" = "4" ]; then
+	elif [ "$_KEY" = "g" ]; then
 	 $game
 	else
 	 shop2
@@ -561,9 +619,12 @@ function shop2-1 {
 	echo "[Y|N]"
 	_key
 	if [ "$_KEY" = "y" ]; then
+	 back=shop2
 	 buy2-1
 	elif [ "$_KEY" = "n" ]; then
 	 shop2
+	elif [ "$_KEY" = "g" ]; then
+	 $game
 	else
 	 shop2-1
 	fi
@@ -580,7 +641,6 @@ function buy2-1 {
 	 hvEC=$(($hvEC + 1))
 	 ECd=$(echo "scale=$sc; x=$EC/$prcsc; if(x<1) print 0; x" | bc)
 	 prcd=$(echo "scale=$sc; x=$prc/$prcsc; if(x<1) print 0; x" | bc)
-	 back=shop2
 	 save
 	else
 	 clear
@@ -601,9 +661,12 @@ function shop2-2 {
 	echo "[Y|N]"
 	_key
 	if [ "$_KEY" = "y" ]; then
+	 back=shop2
 	 buy2-2
 	elif [ "$_KEY" = "n" ]; then
 	 shop2
+	elif [ "$_KEY" = "g" ]; then
+	 $game
 	else
 	 shop2-2
 	fi
@@ -621,7 +684,6 @@ function buy2-2 {
 	 COa=$((hvCO / 100))
 	 COd=$(echo "scale=$sc; x=$CO/$prcsc; if(x<1) print 0; x" | bc)
 	 prcd=$(echo "scale=$sc; x=$prc/$prcsc; if(x<1) print 0; x" | bc)
-	 back=shop2
 	 save
 	else
 	 clear
@@ -648,7 +710,7 @@ PBd=$(echo "scale=$sc; x=$PB/$prcsc; if(x<1) print 0; x" | bc)
 	echo "The more progress you've made the more % loaded each time you press a button!"
 	echo
 	echo "Return to Shop		[3]"
-	echo "Out of my face!		[4]"
+	echo "Out of my face!		[G]"
 	_key
 	if [ "$_KEY" = "1" ]; then
 	 shop1-1
@@ -656,7 +718,7 @@ PBd=$(echo "scale=$sc; x=$PB/$prcsc; if(x<1) print 0; x" | bc)
 	 shop1-2
 	elif [ "$_KEY" = "3" ]; then
 	 shop
-	elif [ "$_KEY" = "4" ]; then
+	elif [ "$_KEY" = "g" ]; then
 	 $game
 	else
 	 shop1
@@ -674,9 +736,12 @@ function shop1-1 {
 	echo "[Y|N]"
 	_key
 	if [ "$_KEY" = "y" ]; then
+	 back=shop1
 	 buy1-1
 	elif [ "$_KEY" = "n" ]; then
 	 shop1
+	elif [ "$_KEY" = "g" ]; then
+	 $game
 	else
 	 shop1-1
 	fi
@@ -693,9 +758,12 @@ function shop1-2 {
 	echo "[Y|N]"
 	_key
 	if [ "$_KEY" = "y" ]; then
+	 back=shop1
 	 buy1-2
 	elif [ "$_KEY" = "n" ]; then
 	 shop1
+	elif [ "$_KEY" = "g" ]; then
+	 $game
 	else
 	 shop1-2
 	fi
@@ -714,7 +782,6 @@ function buy1-1 {
 	 PPd=$(echo "scale=$sc; x=$PP/$prcsc; if(x<1) print 0; x" | bc)
 	 prcd=$(echo "scale=$sc; x=$prc/$prcsc; if(x<1) print 0; x" | bc)
 	 pppd=$(echo "scale=$sc; x=$ppp/$prcsc; if(x<1) print 0; x" | bc)
-	 back=shop1
 	 save
 	else
 	 clear
@@ -735,7 +802,6 @@ function buy1-2 {
 	 hvPB=$(($hvPB + 1))
 	 PBd=$(echo "scale=$sc; x=$PB/$prcsc; if(x<1) print 0; x" | bc)
 	 prcd=$(echo "scale=$sc; x=$prc/$prcsc; if(x<1) print 0; x" | bc)
-	 back=shop1
 	 save
 	else
 	 clear
@@ -756,7 +822,7 @@ function shop {
 	echo "Load Power 	[1]"
 	echo "Self Load 	[2]"
 	echo "Super Load Mode	[3]"
-	echo "Out of my face!	[4]"
+	echo "Out of my face!	[G]"
 	_key
 	if [ "$_KEY" = "1" ]; then
 	 shop1
@@ -764,7 +830,7 @@ function shop {
 	 shop2
 	elif [ "$_KEY" = "3" ]; then
 	 shop3
-	elif [ "$_KEY" = "4" ]; then
+	elif [ "$_KEY" = "g" ]; then
 	 $game
 	else
 	 shop
