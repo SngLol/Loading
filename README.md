@@ -37,5 +37,5 @@ for Ubuntu: http://askubuntu.com/questions/138908/how-to-execute-a-script-just-b
 
 for normal Linux: http://www.linuxquestions.org/questions/programming-9/executing-shell-script-in-terminal-directly-with-a-double-click-370091/
 
-Now you can play the game!
+Now you can play the game!  
 when inside the game, press h for a help page!
