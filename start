@@ -393,7 +393,7 @@ lprcha=$(($LPR / 2))
 	  shop3
 	 fi
 	else
-	 if [ $PBrisex -ge $ppcha ]; then
+	 if [ $PBrisex -ge $pbcha ]; then
 	  echo If you buy this, the price of Progress Blessing will go below 0!
 	  echo "Do you want to buy this now for $PBd"%"?" "You have $prcd"%"!"
 	  echo "[Y|N]"
@@ -405,7 +405,7 @@ lprcha=$(($LPR / 2))
 	   shop3
 	  fi
 	 else
-	  if [ $ECrisex -ge $ppcha ]; then
+	  if [ $ECrisex -ge $eccha ]; then
 	   echo If you buy this, the price of Extra CPU will go below 0!
 	   echo "Do you want to buy this now for $ECd"%"?" "You have $prcd"%"!"
 	   echo "[Y|N]"
@@ -482,7 +482,7 @@ pplra=$(($PPrisex * 2))
 pblra=$(($PBrisex * 2))
 eclra=$(($ECrisex * 2))
 colra=$(($COrisex * 2))
-cphlra=$(($ECrisex * 2))
+cphlra=$(($CPHrisex * 2))
 	clear
 	if [ $pplra -ge $PP ]; then
 	 echo If you buy this, the price of Pressing Power will go below 0!
